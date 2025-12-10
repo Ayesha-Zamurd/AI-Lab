@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Risk Prediction Agent</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-robot"></i>
+                    <h2>Risk Agent</h2>
+                </div>
+                <button class="close-sidebar" id="closeSidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <button class="new-chat-btn" id="newChatBtn">
+                <i class="fas fa-plus"></i>
+                New Analysis
+            </button>
+            <div class="history-list" id="historyList">
+                <!-- History items will be dynamically added here -->
+            </div>
+            <div class="sidebar-footer">
+                <button class="delete-all-btn" id="deleteAllBtn">
+                    <i class="fas fa-trash-alt"></i>
+                    Clear History
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" id="mainContent">
+            <!-- Header -->
+            <header class="header">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                    <span>History</span>
+                </button>
+                <div class="header-content">
+                    <h1>AI Software Development Risk Prediction Agent</h1>
+                    <!-- <p class="tagline">AI-Powered Risk Analysis for Smarter Project Decisions</p> -->
+                </div>
+                <div class="header-graphic">
+                    <div class="graphic-item"></div>
+                    <div class="graphic-item"></div>
+                    <div class="graphic-item"></div>
+                </div>
+            </header>
+
+            <!-- Content Area -->
+            <div class="content-area">
+                <div class="main-section">
+                    <!-- Two Column Layout -->
+                    <div class="two-column-layout">
+                        <!-- Left Column - Project Input -->
+                        <div class="left-column">
+                            <div class="card input-card animated-card">
+                                <div class="card-header">
+                                    <i class="fas fa-project-diagram"></i>
+                                    <h2>Project Input</h2>
+                                </div>
+                                <div class="input-section">
+                                    <!-- Input Options -->
+                                    <div class="input-options">
+                                        <div class="input-option active" data-input="text">
+                                            <i class="fas fa-keyboard"></i>
+                                            <span>Text Input</span>
+                                        </div>
+                                        <div class="input-option" data-input="file">
+                                            <i class="fas fa-file-upload"></i>
+                                            <span>File Upload</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Text Input -->
+                                    <div class="text-input active">
+                                        <textarea id="projectText" placeholder="Describe your project idea or proposal in detail..."></textarea>
+                                        <div class="char-count">
+                                            <span id="charCount">0</span> characters
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- File Upload -->
+                                    <div class="file-upload">
+                                        <div class="upload-area" id="uploadArea">
+                                            <i class="fas fa-cloud-upload-alt"></i>
+                                            <p>Click to upload or drag and drop</p>
+                                            <p class="file-types">Supports PDF, DOCX, PPTX files</p>
+                                        </div>
+                                        <input type="file" id="fileInput" accept=".pdf,.docx,.pptx">
+                                        <div id="fileName" class="file-name"></div>
+                                    </div>
+                                    
+                                    <!-- Analyze Button -->
+                                    <button class="analyze-btn" id="analyzeBtn">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>Analyze Risk</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column - Results -->
+                        <div class="right-column">
+                            <!-- Loading Indicator -->
+                            <div class="loading" id="loadingIndicator">
+                                <div class="spinner"></div>
+                                <p>AI is analyzing your project risks...</p>
+                                <div class="loading-dots">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+
+                            <!-- Results Section -->
+                            <div class="results-section" id="resultsSection">
+                                <!-- Risk Summary Card -->
+                                <div class="card risk-summary-card animated-card">
+                                    <div class="card-header">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <h2>Risk Assessment</h2>
+                                    </div>
+                                    
+                                    <div class="risk-summary">
+                                        <div class="risk-indicator">
+                                            <div class="risk-level" id="riskLevel">
+                                                <span>Low Risk</span>
+                                            </div>
+                                            <div class="risk-score">
+                                                <div class="score-circle">
+                                                    <span id="successScore">85%</span>
+                                                    <p>Success Probability</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="risk-explanation" id="riskExplanation">
+                                            Based on our analysis, your project has a high probability of success with minimal identified risks.
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Charts Container -->
+                                    <div class="charts-container">
+                                        <div class="chart-wrapper animated-card">
+                                            <div class="chart-header">
+                                                <h3>Risk Categories</h3>
+                                                <i class="fas fa-chart-pie"></i>
+                                            </div>
+                                            <canvas id="riskCategoriesChart"></canvas>
+                                        </div>
+                                        
+                                        <div class="chart-wrapper animated-card">
+                                            <div class="chart-header">
+                                                <h3>Success Probability</h3>
+                                                <i class="fas fa-bullseye"></i>
+                                            </div>
+                                            <canvas id="successProbabilityChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Detailed Analysis Card -->
+                                <div class="card detailed-analysis-card animated-card">
+                                    <div class="card-header">
+                                        <i class="fas fa-search"></i>
+                                        <h2>Detailed Risk Analysis</h2>
+                                    </div>
+                                    <div class="detailed-analysis" id="detailedAnalysis">
+                                        <!-- Detailed analysis will be added here -->
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Empty State -->
+                            <div class="empty-state" id="emptyState">
+                                <div class="empty-icon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                                <h3>No Analysis Yet</h3>
+                                <p>Submit a project description to see AI-powered risk analysis</p>
+                                <div class="empty-illustration">
+                                    <div class="illustration-item"></div>
+                                    <div class="illustration-item"></div>
+                                    <div class="illustration-item"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <footer class="footer">
+                <p>&copy; 2025 Project Risk Prediction Agent. AI-Powered Risk Analysis.</p>
+                <!-- <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact Us</a>
+                </div> -->
+            </footer>
+        </div>
+
+        <!-- Overlay for Mobile -->
+        <div class="overlay" id="overlay"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+

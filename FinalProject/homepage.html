@@ -1,0 +1,647 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AI Project Risk Predictor | Smart Risk Analysis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --pri1: #8EC3B0;
+      --pri2: #9ED5C5;
+      --pri3: #BCEAD5;
+      --pri-dark: #6BA895;
+      --bg: #f2f7f5;
+      --white: #ffffff;
+      --text: #0f2f28;
+      --gradient: linear-gradient(135deg, var(--pri1), var(--pri2), var(--pri3));
+      --gradient-dark: linear-gradient(135deg, var(--pri-dark), var(--pri1));
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      font-family: 'Poppins', sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* Animated Background */
+    .bg-animation {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    .floating-shape {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--pri3);
+      opacity: 0.1;
+      animation: float 15s infinite linear;
+    }
+
+    .shape-1 {
+      width: 300px;
+      height: 300px;
+      top: -150px;
+      right: -100px;
+      animation-delay: 0s;
+    }
+
+    .shape-2 {
+      width: 200px;
+      height: 200px;
+      bottom: -50px;
+      left: -50px;
+      animation-delay: -5s;
+      background: var(--pri1);
+    }
+
+    .shape-3 {
+      width: 150px;
+      height: 150px;
+      top: 50%;
+      left: 10%;
+      animation-delay: -10s;
+      background: var(--pri2);
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      33% {
+        transform: translateY(-30px) rotate(120deg);
+      }
+      66% {
+        transform: translateY(30px) rotate(240deg);
+      }
+    }
+
+    /* Header Styles */
+    header {
+      background: var(--gradient-dark);
+      padding: 40px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .header-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      font-size: 48px;
+      font-weight: 800;
+      color: white;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      animation: slideDown 1s ease-out;
+    }
+
+    .logo i {
+      font-size: 42px;
+      animation: pulse 2s infinite;
+    }
+
+    .tagline {
+      font-size: 18px;
+      font-weight: 400;
+      color: rgba(255,255,255,0.9);
+      max-width: 600px;
+      margin: 0 auto;
+      animation: fadeInUp 1s ease-out 0.3s both;
+    }
+
+    /* Main Content */
+    .wrapper {
+      max-width: 1000px;
+      margin: 60px auto;
+      padding: 0 20px;
+      animation: fadeIn 1s ease-out 0.6s both;
+    }
+
+    .menu-card {
+      background: rgba(255,255,255,0.92);
+      padding: 50px 40px;
+      border-radius: 25px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.8);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .menu-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: var(--gradient);
+    }
+
+    .menu-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      font-size: 36px;
+      font-weight: 700;
+      background: var(--gradient);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 20px;
+      animation: slideInLeft 1s ease-out;
+    }
+
+    .subtext {
+      font-size: 18px;
+      opacity: 0.8;
+      margin-bottom: 40px;
+      line-height: 1.6;
+      animation: slideInRight 1s ease-out;
+    }
+
+    /* Features Grid - UPDATED FOR SAME HEIGHT */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin: 40px 0;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.8);
+      padding: 30px 25px;
+      border-radius: 20px;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+      border: 1px solid rgba(142, 195, 176, 0.3);
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.8s ease-out;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 280px; /* Fixed height for all boxes */
+      justify-content: space-between;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.12);
+      background: white;
+    }
+
+    .feature-icon {
+      width: 70px;
+      height: 70px;
+      background: var(--gradient);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 28px;
+      color: white;
+      animation: bounceIn 1s ease-out;
+      flex-shrink: 0;
+    }
+
+    .feature-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .feature-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .feature-desc {
+      font-size: 14px;
+      opacity: 0.7;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    /* Buttons */
+    .btn-box {
+      display: flex;
+      flex-direction: column;
+      gap: 25px;
+      margin-top: 40px;
+    }
+
+    .btn {
+      padding: 20px 30px;
+      border-radius: 16px;
+      background: var(--gradient);
+      color: white;
+      font-size: 20px;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      box-shadow: 0 8px 20px rgba(142, 195, 176, 0.3);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: 0.5s;
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(142, 195, 176, 0.4);
+    }
+
+    .btn i {
+      font-size: 22px;
+      transition: transform 0.3s ease;
+    }
+
+    .btn:hover i {
+      transform: scale(1.2);
+    }
+
+    /* Footer */
+    footer {
+      margin-top: auto;
+      padding: 25px;
+      background: var(--gradient-dark);
+      color: white;
+      text-align: center;
+      border-top-left-radius: 30px;
+      border-top-right-radius: 30px;
+      font-size: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Animations */
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.3);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+      70% {
+        transform: scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .logo {
+        font-size: 36px;
+      }
+      
+      .logo i {
+        font-size: 32px;
+      }
+      
+      .tagline {
+        font-size: 16px;
+      }
+      
+      h1 {
+        font-size: 28px;
+      }
+      
+      .menu-card {
+        padding: 30px 20px;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .feature-card {
+        min-height: 250px;
+      }
+      
+      .btn {
+        padding: 18px 25px;
+        font-size: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .logo {
+        font-size: 28px;
+        flex-direction: column;
+        gap: 10px;
+      }
+      
+      .btn {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+      }
+      
+      .feature-card {
+        min-height: 230px;
+        padding: 25px 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<!-- Animated Background -->
+<div class="bg-animation">
+  <div class="floating-shape shape-1"></div>
+  <div class="floating-shape shape-2"></div>
+  <div class="floating-shape shape-3"></div>
+</div>
+
+<!-- Header -->
+<header>
+  <div class="header-content">
+    <div class="logo">
+      <i class="fas fa-robot"></i>
+      AI Risk Predictor
+    </div>
+    <p class="tagline">Smart AI-powered analysis to predict software project risks and save time, resources, and budget</p>
+  </div>
+</header>
+
+<!-- Main Content -->
+<div class="wrapper">
+  <div class="menu-card">
+    
+    <h1>Choose Your Analysis Method</h1>
+    <p class="subtext">Select how you want to analyze your software project risks. Our AI will help you identify potential issues before they become problems.</p>
+    
+    <!-- Features Section - UPDATED (3 boxes, same height) -->
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chart-bar"></i>
+        </div>
+        <div class="feature-content">
+          <div class="feature-title">Timeline & Cost Analysis</div>
+          <div class="feature-desc">Comprehensive analysis of project timelines and budget requirements to optimize resource allocation</div>
+        </div>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="feature-content">
+          <div class="feature-title">Risk Prediction</div>
+          <div class="feature-desc">Advanced AI algorithms to predict potential project risks and prevent future failures</div>
+        </div>
+      </div>
+      
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="feature-content">
+          <div class="feature-title">Success Prediction</div>
+          <div class="feature-desc">Get AI-powered insights on project success probability and implementation recommendations</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="btn-box">
+      <a href="index.html" class="btn">
+        <i class="fas fa-project-diagram"></i>
+        Complete Project Analysis
+      </a>
+      
+      <a href="TextInput.html" class="btn">
+        <i class="fas fa-keyboard"></i>
+        Quick Text Description
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-content">
+    <p>© 2025 AI Software Project Risk Analyzer | Predicting Risks, Ensuring Success</p>
+  </div>
+</footer>
+
+<script>
+  // Additional interactive animations
+  document.addEventListener('DOMContentLoaded', function() {
+    // Add hover effects to feature cards
+    const featureCards = document.querySelectorAll('.feature-card');
+    featureCards.forEach(card => {
+      card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-8px) scale(1.02)';
+      });
+      
+      card.addEventListener('mouseleave', function() {
+        this.style.transform = 'translateY(0) scale(1)';
+      });
+    });
+
+    // Add click animation to buttons
+    const buttons = document.querySelectorAll('.btn');
+    buttons.forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        // Add ripple effect
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.cssText = `
+          position: absolute;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.6);
+          transform: scale(0);
+          animation: ripple 0.6s linear;
+          width: ${size}px;
+          height: ${size}px;
+          left: ${x}px;
+          top: ${y}px;
+        `;
+        
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+          ripple.remove();
+        }, 600);
+      });
+    });
+
+    // Add CSS for ripple effect
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes ripple {
+        to {
+          transform: scale(4);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+
+    // Ensure all feature cards have same height
+    function setEqualHeights() {
+      const cards = document.querySelectorAll('.feature-card');
+      let maxHeight = 0;
+      
+      // Reset heights first
+      cards.forEach(card => {
+        card.style.height = 'auto';
+      });
+      
+      // Find max height
+      cards.forEach(card => {
+        const height = card.offsetHeight;
+        if (height > maxHeight) {
+          maxHeight = height;
+        }
+      });
+      
+      // Set all to max height
+      cards.forEach(card => {
+        card.style.height = maxHeight + 'px';
+      });
+    }
+
+    // Run on load and resize
+    window.addEventListener('load', setEqualHeights);
+    window.addEventListener('resize', setEqualHeights);
+  });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agent Face</title>
+    <style>
+        :root {
+            --primary: #8EC3B0;
+            --primary-dark: #6BA895;
+            --secondary: #7AB8A5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1A2F28, #2D4A3E);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', sans-serif;
+            cursor: pointer;
+        }
+        
+        .agent-container {
+            text-align: center;
+            padding: 40px;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        
+        .agent-face {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            animation: float 6s ease-in-out infinite;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .agent-face:hover {
+            transform: scale(1.05);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .eyes {
+            position: absolute;
+            top: 60px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+        }
+        
+        .eye {
+            width: 30px;
+            height: 40px;
+            background: white;
+            border-radius: 50%;
+            position: relative;
+            overflow: hidden;
+            animation: blink 4s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 45%, 55%, 100% { height: 40px; }
+            48%, 52% { height: 5px; }
+        }
+        
+        .pupil {
+            width: 15px;
+            height: 15px;
+            background: #2D4A3E;
+            border-radius: 50%;
+            position: absolute;
+            top: 12px;
+            left: 7px;
+            animation: look-around 8s infinite;
+        }
+        
+        @keyframes look-around {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(5px); }
+            50% { transform: translateX(-5px); }
+            75% { transform: translateX(3px); }
+        }
+        
+        .mouth {
+            position: absolute;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 20px;
+            background: white;
+            border-radius: 0 0 30px 30px;
+            animation: talk 3s infinite;
+        }
+        
+        @keyframes talk {
+            0%, 40%, 60%, 100% { height: 20px; }
+            45%, 55% { height: 10px; }
+        }
+        
+        .antenna {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 30px;
+            background: var(--primary-dark);
+            border-radius: 3px;
+        }
+        
+        .antenna::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 15px;
+            height: 15px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: translateX(-50%) scale(1); opacity: 1; }
+            50% { transform: translateX(-50%) scale(1.2); opacity: 0.8; }
+        }
+        
+        .agent-title {
+            color: white;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .agent-subtitle {
+            color: var(--primary);
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+        
+        .loading-dots {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+        
+        .loading-dots span {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--primary);
+            animation: bounce 1.4s infinite ease-in-out;
+        }
+        
+        .loading-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .loading-dots span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        .click-hint {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255,255,255,0.6);
+            font-size: 0.9rem;
+            animation: fadeInOut 2s infinite;
+        }
+        
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        
+        .countdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(26, 47, 40, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .redirecting-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+            text-align: center;
+            z-index: 1001;
+            animation: slideUp 1s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translate(-50%, 20px); opacity: 0; }
+            to { transform: translate(-50%, -50%); opacity: 1; }
+        }
+
+        /* Hidden timer element - screen par show nahi hoga */
+        .hidden-timer {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="agent-container" id="agentContainer">
+        <div class="agent-face" id="agentFace">
+            <div class="antenna"></div>
+            <div class="eyes">
+                <div class="eye">
+                    <div class="pupil"></div>
+                </div>
+                <div class="eye">
+                    <div class="pupil"></div>
+                </div>
+            </div>
+            <div class="mouth"></div>
+        </div>
+        
+        <h1 class="agent-title">AI Software Development Risk Prediction Agent</h1>
+        <p class="agent-subtitle">Analyzing your project risks...</p>
+        
+        <!-- Hidden timer - screen par dikhayi nahi dega -->
+        <div class="hidden-timer" id="hiddenTimer"></div>
+        
+        <div class="loading-dots">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        
+        <div class="click-hint">Click anywhere to continue</div>
+    </div>
+
+    <script>
+        let countdown = 4;
+        let countdownInterval;
+        let redirecting = false;
+
+        // Hidden timer start karein
+        function startHiddenTimer() {
+            const hiddenTimer = document.getElementById('hiddenTimer');
+            
+            countdownInterval = setInterval(() => {
+                countdown--;
+                
+                // Console mein debug ke liye (optional)
+                console.log(`Redirecting in ${countdown} seconds...`);
+                
+                if (countdown === 0) {
+                    redirectToMenu();
+                }
+            }, 1000);
+        }
+
+        // Redirect function
+        function redirectToMenu() {
+            if (redirecting) return;
+            
+            redirecting = true;
+            clearInterval(countdownInterval);
+            
+            // Redirect animation show karein
+            showRedirectAnimation();
+        }
+
+        // Redirect animation function
+        function showRedirectAnimation() {
+            const container = document.getElementById('agentContainer');
+            
+            // Redirect overlay create karein
+            const redirectOverlay = document.createElement('div');
+            redirectOverlay.className = 'countdown-overlay';
+            redirectOverlay.innerHTML = '<div class="redirecting-text">Taking you to Home Page...</div>';
+            
+            document.body.appendChild(redirectOverlay);
+            
+            // 1 second baad redirect karein
+            setTimeout(() => {
+                window.location.href = 'homepage.html';
+            }, 1000);
+        }
+
+        // Click event - kisi bhi jagah click karne par redirect
+        document.addEventListener('click', function() {
+            if (!redirecting) {
+                redirectToMenu();
+            }
+        });
+
+        // Agent face par special hover effect
+        const agentFace = document.getElementById('agentFace');
+        agentFace.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1)';
+        });
+        
+        agentFace.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+
+        // Page load hone ke baad hidden timer start karein
+        window.addEventListener('load', function() {
+            // 1 second delay ke baad timer start karein
+            setTimeout(startHiddenTimer, 1000);
+        });
+
+        // Keyboard support - ESC ya Enter key se bhi redirect
+        document.addEventListener('keydown', function(e) {
+            if (!redirecting && (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ')) {
+                redirectToMenu();
+            }
+        });
+
+        // Touch support for mobile devices
+        document.addEventListener('touchstart', function() {
+            if (!redirecting) {
+                redirectToMenu();
+            }
+        });
+
+        // Agent face par glow effect jab timer almost complete ho
+        setTimeout(() => {
+            if (!redirecting) {
+                agentFace.style.boxShadow = '0 0 30px rgba(142, 195, 176, 0.8)';
+                agentFace.style.animation = 'pulse 0.5s infinite';
+            }
+        }, 3500);
+    </script>
+</body>
+</html>
